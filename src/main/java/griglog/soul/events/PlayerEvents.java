@@ -21,11 +21,11 @@ public class PlayerEvents {
     static void playerTick(TickEvent.PlayerTickEvent event){
         PlayerEntity player = event.player;
         SoulCap cap = player.getCapability(SoulProvider.SOUL_CAP).resolve().get();
-        if (cap.getParryTimer() > 0){
-            cap.setParryTimer(cap.getParryTimer() - 1);
+        if (cap.parryTimer > 0){
+            cap.parryTimer--;
         }
-        if (cap.getCATimer() > 0){
-            cap.setCATimer(cap.getCATimer() - 1);
+        if (cap.parryTimer > 0){
+            cap.parryTimer--;
         }
         /*if (cap.getLeftClicked()) {
             player.stopActiveHand();
@@ -46,10 +46,11 @@ public class PlayerEvents {
             if (player.getHeldItemMainhand().getItem() == Items.zanpakuto && player.isHandActive()) {
                 SF.playSoundPlayer("sword_clash", player);
                 event.setCanceled(true);
-                soulCap.setCATimer(20);
+                soulCap.CATimer = 20;
+                soulCap.justParried = true;
                 player.stopActiveHand();
                 //the event is cancelled and thus not called on client
-                PacketSender.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SoulPacket(soulCap.setJustParried(true)));
+                PacketSender.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SoulPacket(soulCap));
             }
         }
     }

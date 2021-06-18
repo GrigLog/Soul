@@ -27,7 +27,7 @@ public class InputEvents {
         //Soul.LOGGER.info(event.getButton() + " " + event.getAction());
         if (event.getButton() == 1 && event.getAction() == 1) {  //right button pressed down
             SoulCap soulCap = Minecraft.getInstance().player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
-            soulCap.setRightClicked(true);
+            soulCap.rightClicked = true;
             PacketSender.INSTANCE.sendToServer(new SoulPacket(soulCap));
         } else if (event.getButton() == 0 && event.getAction() == 1){  //left button pressed down
             PlayerEntity player = Minecraft.getInstance().player;
@@ -37,7 +37,7 @@ public class InputEvents {
             if (item == Items.holyBow && player.isHandActive()){
                 player.stopActiveHand();
                 SoulCap soulCap = Minecraft.getInstance().player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
-                soulCap.setLeftClicked(true);
+                soulCap.leftClicked = true;
                 PacketSender.INSTANCE.sendToServer(new SoulPacket(soulCap));
             }
         }

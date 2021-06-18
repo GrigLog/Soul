@@ -32,8 +32,8 @@ public class HolyBow extends BowItem implements IFastItem {
         ItemStack itemstack = player.getHeldItem(hand);
         SoulCap soulCap = player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
         //Soul.LOGGER.info("onItemRightClick " + soulCap.getRightClicked());
-        if (soulCap.getRightClicked()){
-            soulCap.setRightClicked(false);
+        if (soulCap.rightClicked){
+            soulCap.rightClicked = false;
 
             boolean flag = canFire(itemstack, player);  //custom check
 

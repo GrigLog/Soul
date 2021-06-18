@@ -41,16 +41,16 @@ public class SoulPacket {
                 ClientPlayerEntity player = Minecraft.getInstance().player;
                 SoulCap cap = player.getCapability(SoulProvider.SOUL_CAP).resolve().get();
                 cap.setNbt(p.cap.getNbt());
-                if (cap.isJustParried()) {
+                if (cap.justParried) {
                     player.stopActiveHand();
-                    cap.setJustParried(false);
+                    cap.justParried = false;
                 }
             } else if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER){
                 ServerPlayerEntity player = ctx.get().getSender();
                 SoulCap cap = player.getCapability(SoulProvider.SOUL_CAP).resolve().get();
                 cap.setNbt(p.cap.getNbt());
-                if (cap.isJustParried()) {
-                    cap.setJustParried(false);
+                if (cap.justParried) {
+                    cap.justParried = false;
                 }
             }
         });

@@ -29,9 +29,9 @@ public class Zanpakuto extends SwordItem implements IFastItem {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand handIn) {
         ItemStack itemstack = player.getHeldItem(handIn);
         SoulCap soulCap = player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
-        if (soulCap.getRightClicked()){
-            soulCap.setRightClicked(false);
-            soulCap.setParryTimer(15);
+        if (soulCap.rightClicked){
+            soulCap.rightClicked = false;
+            soulCap.parryTimer = 15;
             player.setActiveHand(handIn);
             return ActionResult.resultConsume(itemstack);
         }
@@ -59,7 +59,7 @@ public class Zanpakuto extends SwordItem implements IFastItem {
         LazyOptional<SoulCap> soulOpt = player.getCapability(SoulProvider.SOUL_CAP, null);
         if (soulOpt.isPresent()) {
             SoulCap soulCap = soulOpt.resolve().get();
-            if (soulCap.getCATimer() == 0)
+            if (soulCap.CATimer == 0)
                 player.getCooldownTracker().setCooldown(this, 10);
         }
     }
