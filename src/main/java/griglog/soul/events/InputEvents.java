@@ -7,6 +7,7 @@ import griglog.soul.items.HolyBow;
 import griglog.soul.items.misc.Items;
 import griglog.soul.packets.PacketSender;
 import griglog.soul.packets.SoulPacket;
+import griglog.soul.packets.StopHandPacket;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -39,6 +40,7 @@ public class InputEvents {
                 SoulCap soulCap = Minecraft.getInstance().player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
                 soulCap.leftClicked = true;
                 PacketSender.INSTANCE.sendToServer(new SoulPacket(soulCap));
+                PacketSender.INSTANCE.sendToServer(new StopHandPacket());
             }
         }
     }

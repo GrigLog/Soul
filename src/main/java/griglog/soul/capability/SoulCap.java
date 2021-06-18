@@ -8,17 +8,17 @@ public class SoulCap {
     public boolean justParried = false;
     public boolean rightClicked = false;
     public boolean leftClicked = false;
-    public double mana;
-    public double maxMana;
+    public double mana = 0;
+    public double maxMana = 10;
 
-    public boolean trySpendReiatsu(double a) {
+    public boolean trySpendMana(double a) {
         if (mana >= a){
             mana -= a;
             return true;
         }
         return false;
     }
-    public void addReiatsu(double a){
+    public void addMana(double a){
         mana += a;
         if (mana > maxMana)
             mana = maxMana;

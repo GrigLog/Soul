@@ -1,40 +1,40 @@
 package griglog.soul.events;
 
 import griglog.soul.Soul;
+import griglog.soul.capability.SoulCap;
+import griglog.soul.capability.SoulProvider;
 import griglog.soul.entities.Entities;
 import griglog.soul.entities.HolyArrowRenderer;
 import griglog.soul.entities.HolyBeamRenderer;
 import griglog.soul.items.misc.Items;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@Mod.EventBusSubscriber(value=Dist.CLIENT, bus=Mod.EventBusSubscriber.Bus.MOD)
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+@Mod.EventBusSubscriber(value=Dist.CLIENT)
 public class ClientEvents {
     @SubscribeEvent
-    public static void setupClient(FMLClientSetupEvent event){
-        ItemModelsProperties.registerProperty(Items.zanpakuto, new ResourceLocation(Soul.id, "blocking"),
-                (stack, world, living) -> {
-            boolean res = living != null && living.isHandActive();
-            return res ? 1f : 0f;
-        });
-        ItemModelsProperties.registerProperty(Items.holyBow, new ResourceLocation("pull"), (stack, world, living) -> {
-            if (living == null) {
-                return 0.0F;
-            } else {
-                return living.getActiveItemStack() != stack ? 0.0F : (float)(stack.getUseDuration() - living.getItemInUseCount()) / 20.0F;
-            }
-        });
-        ItemModelsProperties.registerProperty(Items.holyBow, new ResourceLocation("pulling"),
-                (stack, world, living) -> living != null && living.isHandActive() && living.getActiveItemStack() == stack ? 1.0F : 0.0F);
-
-
-        RenderingRegistry.registerEntityRenderingHandler(Entities.holyArrow, HolyArrowRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(Entities.holyBeam, HolyBeamRenderer::new);
-        //RenderingRegistry.registerEntityRenderingHandler(Entities.holyBeam, HolyBeamRenderer::new);
+    static void renderOverlay(RenderGameOverlayEvent event){
+        if (event.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
+            SoulCap soulCap = Minecraft.getInstance().player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
+            FontRenderer fr = Minecraft.getInstance().fontRenderer;
+            int heightHalf = Minecraft.getInstance().getMainWindow().getHeight() / 2;  //no fucking idea why I have to divide by 2
+            int widthHalf = Minecraft.getInstance().getMainWindow().getWidth() / 2;
+            /*StringTextComponent tc = new StringTextComponent("mana");
+            tc.mergeStyle(TextFormatting.BOLD).mergeStyle(TextFormatting.DARK_BLUE);*/
+            fr.drawString(event.getMatrixStack(), "Reiatsu:" + (long)soulCap.mana + "/" + (long)soulCap.maxMana, widthHalf * 0.2f, heightHalf * 0.8f, 0x1f75fe);
+        }
     }
 }

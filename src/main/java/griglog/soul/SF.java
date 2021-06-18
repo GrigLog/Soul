@@ -1,5 +1,7 @@
 package griglog.soul;
 
+import griglog.soul.capability.SoulCap;
+import griglog.soul.capability.SoulProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.gui.IngameGui;
@@ -24,4 +26,8 @@ public class SF {
     }
 
     public static String world(World world){return world.isRemote ? "client" : "server";}
+
+    public static SoulCap getSoul(PlayerEntity player){
+        return player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
+    }
 }

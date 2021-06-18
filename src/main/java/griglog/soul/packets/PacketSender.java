@@ -20,7 +20,7 @@ public class PacketSender {
     private static int msgId = 0;
 
     public static void init() {
-        INSTANCE.registerMessage(msgId++, MyPacket.class, MyPacket::encode, MyPacket::decode, MyPacket::handle);
+        INSTANCE.registerMessage(msgId++, StopHandPacket.class, StopHandPacket::encode, StopHandPacket::decode, StopHandPacket::handle);
         INSTANCE.registerMessage(msgId++, SoulPacket.class, SoulPacket::encode, SoulPacket::decode, SoulPacket::handle);
     }
 }
