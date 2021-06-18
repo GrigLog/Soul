@@ -1,0 +1,14 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "soul:items/zanpakuto"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "soul:blocking": 1.0
+      },
+      "model": "soul:item/zanpakuto_2"
+    }
+  ]
+}
