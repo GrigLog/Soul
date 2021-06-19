@@ -14,6 +14,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
+import java.text.DecimalFormat;
+
 @Mod.EventBusSubscriber
 public class PlayerEvents {
     @SubscribeEvent
@@ -28,7 +30,7 @@ public class PlayerEvents {
                 cap.parryTimer--;
             }
             cap.addMana(0.05);
-            //Soul.LOGGER.info(SF.world(player.world) + " " + cap.mana + " " + cap.maxMana);
+            //Soul.LOGGER.info(SF.world(player.world) + " " + new DecimalFormat("#.##").format(cap.mana)+ " " + new DecimalFormat("#.##").format(cap.maxMana));
         }
     }
 

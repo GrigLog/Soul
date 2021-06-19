@@ -26,6 +26,7 @@ public class SoulCap {
     public HashMap<String, Integer> usedKeyItems = new HashMap<>();
 
     public boolean trySpendMana(double a) {
+        Soul.LOGGER.info("spend " + a + " mana");
         if (mana >= a){
             mana -= a;
             return true;

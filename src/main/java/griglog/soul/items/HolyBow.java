@@ -55,12 +55,13 @@ public class HolyBow extends BowItem implements IFastItem {
 
 
     @Override
-    //called on both sides after manual or forced release
+    //stoppedUsing client - stoppedUsing server - swing client - swing server
     public void onPlayerStoppedUsing(ItemStack stack, World world, LivingEntity entity, int timeLeft) {
         if (!(entity instanceof PlayerEntity))
             return;
         PlayerEntity player = (PlayerEntity) entity;
         SoulCap cap = SF.getSoul(player);
+        //Soul.LOGGER.info("stoppedUsing " + SF.world(world));
         if (cap.leftClicked){  //we are going to fire a special, no arrows!
             cap.leftClicked = false;
             beam_release = true; //flag for onEntitySwing to recognize special
@@ -91,6 +92,7 @@ public class HolyBow extends BowItem implements IFastItem {
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
         if (!(entity instanceof PlayerEntity))
             return true;
+        //Soul.LOGGER.info("swing " + SF.world(entity.world));
         PlayerEntity player = (PlayerEntity)entity;
         SoulCap cap = SF.getSoul(player);
         if (!player.world.isRemote && beam_release && cap.trySpendMana(5)){
