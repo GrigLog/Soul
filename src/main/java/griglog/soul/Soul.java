@@ -1,7 +1,6 @@
 package griglog.soul;
 
 import griglog.soul.capability.SoulCap;
-import griglog.soul.capability.SoulStorage;
 import griglog.soul.entities.Entities;
 import griglog.soul.entities.HolyArrowRenderer;
 import griglog.soul.entities.HolyBeamRenderer;
@@ -31,7 +30,7 @@ public class Soul {
 
     @SubscribeEvent
     public static void setup(final FMLCommonSetupEvent event) {  //pre-init
-        CapabilityManager.INSTANCE.register(SoulCap.class, new SoulStorage(), () -> new SoulCap());
+        CapabilityManager.INSTANCE.register(SoulCap.class, new SoulCap.SoulStorage(), () -> new SoulCap());
         PacketSender.init();
     }
 

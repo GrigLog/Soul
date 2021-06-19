@@ -1,8 +1,8 @@
 package griglog.soul.events;
 
+import griglog.soul.SF;
 import griglog.soul.Soul;
 import griglog.soul.capability.SoulCap;
-import griglog.soul.capability.SoulProvider;
 import griglog.soul.items.HolyBow;
 import griglog.soul.items.misc.Items;
 import griglog.soul.packets.PacketSender;
@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,7 +28,7 @@ public class InputEvents {
         KeyBinding keyUse = Minecraft.getInstance().gameSettings.keyBindUseItem;
         //Soul.LOGGER.info(event.getButton() + " " + event.getAction());
         if (event.getButton() == 1 && event.getAction() == 1) {  //right button pressed down
-            SoulCap soulCap = Minecraft.getInstance().player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
+            SoulCap soulCap = SF.getSoul(Minecraft.getInstance().player);
             soulCap.rightClicked = true;
             PacketSender.INSTANCE.sendToServer(new SoulPacket(soulCap));
         } else if (event.getButton() == 0 && event.getAction() == 1){  //left button pressed down
@@ -37,7 +38,7 @@ public class InputEvents {
             Item item = player.getHeldItemMainhand().getItem();
             if (item == Items.holyBow && player.isHandActive()){
                 player.stopActiveHand();
-                SoulCap soulCap = Minecraft.getInstance().player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
+                SoulCap soulCap = SF.getSoul(Minecraft.getInstance().player);
                 soulCap.leftClicked = true;
                 PacketSender.INSTANCE.sendToServer(new SoulPacket(soulCap));
                 PacketSender.INSTANCE.sendToServer(new StopHandPacket());

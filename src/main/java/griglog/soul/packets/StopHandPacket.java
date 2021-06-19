@@ -1,8 +1,5 @@
 package griglog.soul.packets;
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import griglog.soul.capability.SoulCap;
-import griglog.soul.capability.SoulProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;

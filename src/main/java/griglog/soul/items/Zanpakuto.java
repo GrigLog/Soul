@@ -1,7 +1,7 @@
 package griglog.soul.items;
 
+import griglog.soul.SF;
 import griglog.soul.capability.SoulCap;
-import griglog.soul.capability.SoulProvider;
 import griglog.soul.items.misc.CreativeTab;
 import griglog.soul.items.misc.IFastItem;
 import net.minecraft.entity.LivingEntity;
@@ -28,7 +28,7 @@ public class Zanpakuto extends SwordItem implements IFastItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand handIn) {
         ItemStack itemstack = player.getHeldItem(handIn);
-        SoulCap soulCap = player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
+        SoulCap soulCap = SF.getSoul(player);
         if (soulCap.rightClicked){
             soulCap.rightClicked = false;
             soulCap.parryTimer = 15;
@@ -56,12 +56,9 @@ public class Zanpakuto extends SwordItem implements IFastItem {
 
 
     private void releaseChecks(PlayerEntity player) {
-        LazyOptional<SoulCap> soulOpt = player.getCapability(SoulProvider.SOUL_CAP, null);
-        if (soulOpt.isPresent()) {
-            SoulCap soulCap = soulOpt.resolve().get();
-            if (soulCap.CATimer == 0)
-                player.getCooldownTracker().setCooldown(this, 10);
-        }
+        SoulCap cap = SF.getSoul(player);
+        if (cap.CATimer == 0)
+            player.getCooldownTracker().setCooldown(this, 10);
     }
 
 }

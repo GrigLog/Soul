@@ -3,7 +3,6 @@ package griglog.soul.items;
 import griglog.soul.SF;
 import griglog.soul.Soul;
 import griglog.soul.capability.SoulCap;
-import griglog.soul.capability.SoulProvider;
 import griglog.soul.entities.HolyArrow;
 import griglog.soul.entities.HolyBeam;
 import griglog.soul.items.misc.CreativeTab;
@@ -35,7 +34,7 @@ public class HolyBow extends BowItem implements IFastItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
-        SoulCap soulCap = player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
+        SoulCap soulCap = SF.getSoul(player);
         if (soulCap.rightClicked){
             soulCap.rightClicked = false;
 
@@ -62,9 +61,9 @@ public class HolyBow extends BowItem implements IFastItem {
             return;
         PlayerEntity player = (PlayerEntity) entity;
         SoulCap cap = SF.getSoul(player);
-        if (cap.leftClicked){  //we just fired a special, no arrows as a follow-up!
+        if (cap.leftClicked){  //we are going to fire a special, no arrows!
             cap.leftClicked = false;
-            beam_release = true;
+            beam_release = true; //flag for onEntitySwing to recognize special
             return;
         }
 

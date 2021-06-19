@@ -1,9 +1,9 @@
 package griglog.soul.packets;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import griglog.soul.SF;
 import griglog.soul.Soul;
 import griglog.soul.capability.SoulCap;
-import griglog.soul.capability.SoulProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,7 +39,7 @@ public class SoulPacket {
         ctx.get().enqueueWork(() -> {
             if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
                 ClientPlayerEntity player = Minecraft.getInstance().player;
-                SoulCap cap = player.getCapability(SoulProvider.SOUL_CAP).resolve().get();
+                SoulCap cap = SF.getSoul(player);
                 cap.setNbt(p.cap.getNbt());
                 if (cap.justParried) {
                     player.stopActiveHand();
@@ -47,7 +47,7 @@ public class SoulPacket {
                 }
             } else if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER){
                 ServerPlayerEntity player = ctx.get().getSender();
-                SoulCap cap = player.getCapability(SoulProvider.SOUL_CAP).resolve().get();
+                SoulCap cap = SF.getSoul(player);
                 cap.setNbt(p.cap.getNbt());
                 if (cap.justParried) {
                     cap.justParried = false;

@@ -3,7 +3,6 @@ package griglog.soul.events;
 import griglog.soul.SF;
 import griglog.soul.Soul;
 import griglog.soul.capability.SoulCap;
-import griglog.soul.capability.SoulProvider;
 import griglog.soul.items.misc.Items;
 import griglog.soul.packets.PacketSender;
 import griglog.soul.packets.SoulPacket;
@@ -21,7 +20,7 @@ public class PlayerEvents {
     static void playerTick(TickEvent.PlayerTickEvent event){
         if (event.phase == TickEvent.Phase.START) {
             PlayerEntity player = event.player;
-            SoulCap cap = player.getCapability(SoulProvider.SOUL_CAP).resolve().get();
+            SoulCap cap = SF.getSoul(player);
             if (cap.parryTimer > 0) {
                 cap.parryTimer--;
             }
@@ -29,7 +28,7 @@ public class PlayerEvents {
                 cap.parryTimer--;
             }
             cap.addMana(0.05);
-            //Soul.LOGGER.info(cap.mana);
+            //Soul.LOGGER.info(SF.world(player.world) + " " + cap.mana + " " + cap.maxMana);
         }
     }
 
@@ -38,7 +37,7 @@ public class PlayerEvents {
         if (!(event.getEntityLiving() instanceof PlayerEntity))
             return;
         PlayerEntity player = (PlayerEntity)event.getEntityLiving();
-        SoulCap soulCap = player.getCapability(SoulProvider.SOUL_CAP, null).resolve().get();
+        SoulCap soulCap = player.getCapability(SoulCap.SoulProvider.SOUL_CAP, null).resolve().get();
         if (player.getHeldItemMainhand().getItem() == Items.zanpakuto && player.isHandActive()) {
             SF.playSoundPlayer("sword_clash", player);
             event.setCanceled(true);
