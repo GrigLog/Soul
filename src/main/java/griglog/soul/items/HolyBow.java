@@ -55,7 +55,7 @@ public class HolyBow extends BowItem implements IFastItem {
 
 
     @Override
-    //stoppedUsing client - stoppedUsing server - swing client - swing server
+    //left click - stoppedUsing client - stoppedUsing server - swing client - swing server
     public void onPlayerStoppedUsing(ItemStack stack, World world, LivingEntity entity, int timeLeft) {
         if (!(entity instanceof PlayerEntity))
             return;
