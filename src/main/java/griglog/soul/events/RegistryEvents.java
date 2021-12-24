@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 public class RegistryEvents {
     @SubscribeEvent
     static void registerItems(final RegistryEvent.Register<Item> event){
-        event.getRegistry().registerAll(Items.zanpakuto, Items.holyBow, Items.badge, Items.reishiChest);
+        event.getRegistry().registerAll(Items.zanpakuto, Items.holyBow, Items.badge);
     }
 
     @SubscribeEvent

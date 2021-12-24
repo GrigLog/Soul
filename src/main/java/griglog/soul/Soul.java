@@ -50,6 +50,7 @@ public class Soul {
         });
         ItemModelsProperties.registerProperty(Items.holyBow, new ResourceLocation("pulling"),
                 (stack, world, living) -> living != null && living.isHandActive() && living.getActiveItemStack() == stack ? 1.0F : 0.0F);
+        //ItemModelsProperties.registerProperty();
         RenderingRegistry.registerEntityRenderingHandler(Entities.holyArrow, HolyArrowRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(Entities.holyBeam, HolyBeamRenderer::new);
     }

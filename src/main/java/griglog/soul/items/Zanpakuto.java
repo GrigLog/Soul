@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class Zanpakuto extends SwordItem implements IFastItem {
     public Zanpakuto() {
@@ -39,23 +38,23 @@ public class Zanpakuto extends SwordItem implements IFastItem {
     }
 
     @Override
+    //rmb is released
     public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entity, int timeLeft) {
         super.onPlayerStoppedUsing(stack, worldIn, entity, timeLeft);
         if (entity instanceof PlayerEntity)
-            releaseChecks((PlayerEntity)entity);
+            onRelease((PlayerEntity)entity);
     }
 
     @Override
+    //useDuration is over
     public ItemStack onItemUseFinish(ItemStack stack, World world, LivingEntity entity) {
         super.onItemUseFinish(stack, world, entity);
         if (entity instanceof PlayerEntity)
-            releaseChecks((PlayerEntity)entity);
+            onRelease((PlayerEntity)entity);
         return stack;
     }
 
-
-
-    private void releaseChecks(PlayerEntity player) {
+    private void onRelease(PlayerEntity player) {
         SoulCap cap = SF.getSoul(player);
         if (cap.CATimer == 0)
             player.getCooldownTracker().setCooldown(this, 10);

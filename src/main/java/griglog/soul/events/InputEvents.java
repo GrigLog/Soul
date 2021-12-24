@@ -27,15 +27,15 @@ public class InputEvents {
     public static void onEvent(InputEvent.MouseInputEvent event)
     {
         KeyBinding keyUse = Minecraft.getInstance().gameSettings.keyBindUseItem;
-        //Soul.LOGGER.info(event.getButton() + " " + event.getAction());
+        //Soul.LOGGER.debug(event.getButton() + " " + event.getAction());
         if (event.getButton() == 1 && event.getAction() == 1) {  //right button pressed down
-            //Soul.LOGGER.info("right click client");
+            //Soul.LOGGER.debug("right click client");
             SoulCap soulCap = SF.getSoul(Minecraft.getInstance().player);
             soulCap.rightClicked = true;
             PacketSender.INSTANCE.sendToServer(new SoulPacket(soulCap));
 
         } else if (event.getButton() == 0 && event.getAction() == 1){  //left button pressed down
-            //Soul.LOGGER.info("left click client");
+            //Soul.LOGGER.debug("left click client");
             PlayerEntity player = Minecraft.getInstance().player;
             if (player == null || player.getHeldItemMainhand() == ItemStack.EMPTY)
                 return;

@@ -72,7 +72,7 @@ public class CustomArmorModel extends BipedModel<LivingEntity> {
 		RightLeg.render(matrixStack, buffer, packedLight, packedOverlay);
 		LeftLeg.render(matrixStack, buffer, packedLight, packedOverlay);*/
 
-		setModelAttributes();
+		//setModelAttributes();
 		bipedHead = helmAnchor;
 		bipedRightArm = RightArm;
 		super.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);

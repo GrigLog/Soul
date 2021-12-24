@@ -29,6 +29,9 @@ public class PlayerEvents {
             if (cap.parryTimer > 0) {
                 cap.parryTimer--;
             }
+            if (cap.CATimer > 0){
+                cap.CATimer--;
+            }
             cap.addMana(0.05);
             //Soul.LOGGER.info(SF.world(player.world) + " " + new DecimalFormat("#.##").format(cap.mana)+ " " + new DecimalFormat("#.##").format(cap.maxMana));
         }

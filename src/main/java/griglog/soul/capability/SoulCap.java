@@ -76,11 +76,13 @@ public class SoulCap {
         public static Capability<SoulCap> SOUL_CAP;
         private final LazyOptional<SoulCap> instance = LazyOptional.of(() -> new SoulCap());
 
+        @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
             return cap == SOUL_CAP ? instance.cast() : LazyOptional.empty();
         }
 
+        @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
             return cap == SOUL_CAP ? instance.cast() : LazyOptional.empty();
