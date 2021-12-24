@@ -16,8 +16,14 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 
 public class SoulCap {
+    public static int CATimerMax = 20;
+    public static int dashWindowMax = 3;
+    public static int dashCDMax = 20;
+
     public int parryTimer = 0;
     public int CATimer = 0;
+    public int dashWindow = 0;
+    public int dashCD = 0;
     public boolean justParried = false;
     public boolean rightClicked = false;
     public boolean leftClicked = false;

@@ -37,4 +37,8 @@ public class SF {
     public static void sendToClient(ServerPlayerEntity player, SoulCap cap){
         PacketSender.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new SoulPacket(cap));
     }
+
+    public static void sendToServer(SoulCap cap){
+        PacketSender.INSTANCE.sendToServer(new SoulPacket(cap));
+    }
 }

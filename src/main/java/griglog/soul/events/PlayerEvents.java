@@ -32,6 +32,10 @@ public class PlayerEvents {
             if (cap.CATimer > 0){
                 cap.CATimer--;
             }
+            if (cap.dashWindow > 0)
+                cap.dashWindow--;
+            if (cap.dashCD > 0)
+                cap.dashCD--;
             cap.addMana(0.05);
             //Soul.LOGGER.info(SF.world(player.world) + " " + new DecimalFormat("#.##").format(cap.mana)+ " " + new DecimalFormat("#.##").format(cap.maxMana));
         }
