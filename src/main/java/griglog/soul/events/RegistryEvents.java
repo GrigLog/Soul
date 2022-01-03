@@ -14,12 +14,12 @@ import net.minecraftforge.fml.common.Mod;
 public class RegistryEvents {
     @SubscribeEvent
     static void registerItems(final RegistryEvent.Register<Item> event){
-        event.getRegistry().registerAll(Items.zanpakuto, Items.holyBow, Items.badge);
+        event.getRegistry().registerAll(Items.zanpakuto, Items.holyBow, Items.badge, Items.dagger);
     }
 
     @SubscribeEvent
     static void registerEntities(final RegistryEvent.Register<EntityType<?>> event){
-        event.getRegistry().registerAll(Entities.holyArrow.setRegistryName("holy_arrow"), Entities.holyBeam.setRegistryName("holy_beam"));
+        event.getRegistry().registerAll(Entities.holyArrow, Entities.holyBeam);
     }
 
     /*@SubscribeEvent

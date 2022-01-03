@@ -6,10 +6,10 @@ import griglog.soul.entities.HolyArrow;
 
 
 public class Entities {
-    public static final EntityType<HolyArrow> holyArrow = EntityType.Builder
+    public static final EntityType<HolyArrow> holyArrow = (EntityType<HolyArrow>) EntityType.Builder
             .<HolyArrow>create(HolyArrow::new, EntityClassification.MISC)
-            .build("");
-    public static final EntityType<HolyBeam> holyBeam = EntityType.Builder
+            .build("").setRegistryName("holy_arrow");
+    public static final EntityType<HolyBeam> holyBeam = (EntityType<HolyBeam>) EntityType.Builder
             .<HolyBeam>create(HolyBeam::new, EntityClassification.MISC)
-            .build("");
+            .build("").setRegistryName("holy_beam");
 }

@@ -6,9 +6,9 @@
   "overrides": [
     {
       "predicate": {
-        "pulling": 1
+        "soul:active": 1.0
       },
-      "model": "soul:item/holy_bow_pulling_0"
+      "model": "soul:item/dagger_2"
     }
   ]
 }

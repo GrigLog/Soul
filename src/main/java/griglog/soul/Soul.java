@@ -6,6 +6,10 @@ import griglog.soul.entities.HolyArrowRenderer;
 import griglog.soul.entities.HolyBeamRenderer;
 import griglog.soul.items.misc.Items;
 import griglog.soul.packets.PacketSender;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -16,6 +20,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("soul")
@@ -37,10 +42,7 @@ public class Soul {
     @SubscribeEvent
     public static void setupClient(FMLClientSetupEvent event) {
         ItemModelsProperties.registerProperty(Items.zanpakuto, new ResourceLocation(Soul.id, "blocking"),
-                (stack, world, living) -> {
-                    boolean res = living != null && living.isHandActive();
-                    return res ? 1f : 0f;
-                });
+                (stack, world, living) -> living != null && living.isHandActive() ? 1f : 0f);
         ItemModelsProperties.registerProperty(Items.holyBow, new ResourceLocation("pull"), (stack, world, living) -> {
             if (living == null) {
                 return 0.0F;
@@ -50,7 +52,8 @@ public class Soul {
         });
         ItemModelsProperties.registerProperty(Items.holyBow, new ResourceLocation("pulling"),
                 (stack, world, living) -> living != null && living.isHandActive() && living.getActiveItemStack() == stack ? 1.0F : 0.0F);
-        //ItemModelsProperties.registerProperty();
+        ItemModelsProperties.registerProperty(Items.dagger, new ResourceLocation(Soul.id, "active"),
+                (stack, world, living) -> stack.getTag() != null && stack.getTag().getBoolean("active") ? 1f : 0f);
         RenderingRegistry.registerEntityRenderingHandler(Entities.holyArrow, HolyArrowRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(Entities.holyBeam, HolyBeamRenderer::new);
     }
