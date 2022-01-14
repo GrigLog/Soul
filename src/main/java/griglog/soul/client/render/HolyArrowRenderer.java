@@ -1,6 +1,7 @@
-package griglog.soul.entities;
+package griglog.soul.client.render;
 
 import griglog.soul.Soul;
+import griglog.soul.entities.HolyArrow;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -13,6 +14,6 @@ public class HolyArrowRenderer extends ArrowRenderer<HolyArrow> {
 
     @Override
     public ResourceLocation getEntityTexture(HolyArrow entity) {
-        return new ResourceLocation(Soul.id, "textures/entity/holy_arrow.png"); //TODO: check other path formats
+        return new ResourceLocation(Soul.id, "textures/entity/holy_arrow.png");
     }
 }

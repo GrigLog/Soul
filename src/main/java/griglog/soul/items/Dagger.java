@@ -70,12 +70,11 @@ public class Dagger extends SwordItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-        if (slot == EquipmentSlotType.MAINHAND)
-        {
-            multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier",
-                    (stack.getTag().getBoolean("active") ? 8 : 2), AttributeModifier.Operation.ADDITION));
+        if (slot == EquipmentSlotType.MAINHAND) {
             multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier",
                     (stack.getTag().getBoolean("active") ? -2.4 : 0), AttributeModifier.Operation.ADDITION));
+            multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier",
+                    (stack.getTag().getBoolean("active") ? 8 : 2), AttributeModifier.Operation.ADDITION));
         }
 
         return multimap;

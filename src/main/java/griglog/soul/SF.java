@@ -31,7 +31,7 @@ public class SF {
     public static String world(World world){return world.isRemote ? "client" : "server";}
 
     public static SoulCap getSoul(PlayerEntity player){
-        return player.getCapability(SoulCap.SoulProvider.SOUL_CAP, null).resolve().get();
+        return player.getCapability(SoulCap.SoulProvider.SOUL_CAP, null).resolve().orElse(null);
     }
 
     public static void sendToClient(ServerPlayerEntity player, SoulCap cap){

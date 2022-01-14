@@ -3,5 +3,7 @@
   "item.soul.zanpakuto": "Zanpakuto",
   "item.soul.holy_bow": "Holy Bow",
   "item.soul.badge": "Shinigami Badge",
-  "item.soul.dagger": "Soul dagger"
+  "item.soul.dagger": "Soul dagger",
+
+  "entity.soul.hollow": "Hollow"
 }

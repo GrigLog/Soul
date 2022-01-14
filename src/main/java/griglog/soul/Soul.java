@@ -1,15 +1,13 @@
 package griglog.soul;
 
 import griglog.soul.capability.SoulCap;
+import griglog.soul.client.render.HollowRenderer;
 import griglog.soul.entities.Entities;
-import griglog.soul.entities.HolyArrowRenderer;
-import griglog.soul.entities.HolyBeamRenderer;
+import griglog.soul.client.render.HolyArrowRenderer;
+import griglog.soul.client.render.HolyBeamRenderer;
 import griglog.soul.items.misc.Items;
 import griglog.soul.packets.PacketSender;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -30,7 +28,6 @@ public class Soul {
     public static final String id = "soul";
 
     public Soul() {
-
     }
 
     @SubscribeEvent
@@ -56,6 +53,7 @@ public class Soul {
                 (stack, world, living) -> stack.getTag() != null && stack.getTag().getBoolean("active") ? 1f : 0f);
         RenderingRegistry.registerEntityRenderingHandler(Entities.holyArrow, HolyArrowRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(Entities.holyBeam, HolyBeamRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(Entities.hollow, HollowRenderer::new);
     }
 
 

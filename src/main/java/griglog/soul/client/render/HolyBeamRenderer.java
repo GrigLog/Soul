@@ -1,6 +1,7 @@
-package griglog.soul.entities;
+package griglog.soul.client.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import griglog.soul.entities.HolyBeam;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
