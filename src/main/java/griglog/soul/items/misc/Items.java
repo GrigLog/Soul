@@ -10,5 +10,6 @@ public class Items {
     public static final Item badge = new Badge();
     public static final Item dagger = new Dagger();
 
-    //public static final Item reishiChest = new Armor(EquipmentSlotType.CHEST, "reishi_chest");
+    public static final Item reishiChest = new Armor(EquipmentSlotType.CHEST);
+    public static final Item reishiLeg = new Armor(EquipmentSlotType.LEGS);
 }

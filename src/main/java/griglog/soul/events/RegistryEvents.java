@@ -26,7 +26,7 @@ import java.util.Set;
 public class RegistryEvents {
     @SubscribeEvent
     static void registerItems(final RegistryEvent.Register<Item> event){
-        event.getRegistry().registerAll(Items.zanpakuto, Items.holyBow, Items.badge, Items.dagger);
+        event.getRegistry().registerAll(Items.zanpakuto, Items.holyBow, Items.badge, Items.dagger, Items.reishiChest, Items.reishiLeg);
     }
 
     @SubscribeEvent

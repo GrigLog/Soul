@@ -2,6 +2,7 @@ package griglog.soul.items;
 
 import griglog.soul.client.model.CustomArmorModel;
 import griglog.soul.items.misc.CreativeTab;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -15,9 +16,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class Armor extends ArmorItem {
-    public Armor(EquipmentSlotType slot, String regName) {
+    public Armor(EquipmentSlotType slot) {
         super(new Reishi(), slot, new Properties().group(CreativeTab.instance));
-        setRegistryName(regName);
+        setRegistryName("reishi_" + slot.getName());
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -27,15 +28,11 @@ public class Armor extends ArmorItem {
     }
 
 
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
         return (A) new CustomArmorModel();
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public BipedModel<?> provideArmorModelForSlot(EquipmentSlotType slot) {
-        return new CustomArmorModel();
     }
 
     public static class Reishi implements IArmorMaterial {

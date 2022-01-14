@@ -44,6 +44,23 @@ public class SoulCap {
             mana = maxMana;
     }
 
+    public void tick(){
+        if (parryTimer > 0) {
+            parryTimer--;
+        }
+        if (parryTimer > 0) {
+            parryTimer--;
+        }
+        if (CATimer > 0){
+            CATimer--;
+        }
+        if (dashWindow > 0)
+            dashWindow--;
+        if (dashCD > 0)
+            dashCD--;
+        addMana(0.05);
+    }
+
 
     public CompoundNBT getNbt(){
         CompoundNBT tag = new CompoundNBT();
