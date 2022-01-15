@@ -28,10 +28,27 @@ public class CapabilityEvents {
     @SubscribeEvent
     static void playerLogin(PlayerEvent.PlayerLoggedInEvent event){
         PlayerEntity player = event.getPlayer();
-        if (!player.world.isRemote) {
-            SoulCap cap = SF.getSoul(player);
-            SF.sendToClient((ServerPlayerEntity) player, cap);
-        }
+        SoulCap cap = SF.getSoul(player);
+        SF.sendToClient((ServerPlayerEntity) player, cap);
+    }
+
+    @SubscribeEvent
+    static void respawn(PlayerEvent.PlayerRespawnEvent event){
+        ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+        SF.sendToClient(player, SF.getSoul(player));
+    }
+
+    @SubscribeEvent
+    static void changedDim(PlayerEvent.PlayerChangedDimensionEvent event){
+        ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+        SF.sendToClient(player, SF.getSoul(player));
+    }
+
+    @SubscribeEvent
+    static void copyPlayerDataOnRespawn(PlayerEvent.Clone event){
+        SoulCap soul = SF.getSoul(event.getOriginal());
+        SoulCap soulNew = SF.getSoul(event.getPlayer());
+        soulNew.setNbt(soul.getNbt());
     }
 
 }

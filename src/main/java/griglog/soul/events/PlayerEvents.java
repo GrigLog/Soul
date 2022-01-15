@@ -14,6 +14,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import javax.annotation.Syntax;
 import java.text.DecimalFormat;
@@ -47,11 +48,5 @@ public class PlayerEvents {
         }
     }
 
-    @SubscribeEvent
-    static void copyPlayerDataOnRespawn(PlayerEvent.Clone event){
-        SoulCap soul = SF.getSoul(event.getOriginal());
-        SoulCap soulNew = SF.getSoul(event.getPlayer());
-        soulNew.setNbt(soul.getNbt());
-        SF.sendToClient((ServerPlayerEntity)event.getPlayer(), soulNew);
-    }
+
 }

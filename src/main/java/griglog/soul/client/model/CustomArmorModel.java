@@ -51,6 +51,7 @@ public class CustomArmorModel extends BipedModel<LivingEntity> {
 	@Override
 	public void setRotationAngles(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+		Soul.LOGGER.debug("set rotation angles called");
 		//i have no idea when this shit is called lol. That's why I didn't place copyModelAngles()'s here,
 		//by the time render() executes angles are set to 0's again.
 	}
