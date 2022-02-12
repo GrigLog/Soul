@@ -28,12 +28,12 @@ public class ClientEvents {
             SoulCap soulCap = SF.getSoul(Minecraft.getInstance().player);
             if (soulCap == null)
                 return;
-            FontRenderer fr = Minecraft.getInstance().fontRenderer;
-            int heightHalf = Minecraft.getInstance().getMainWindow().getHeight() / 2;  //no fucking idea why I have to divide by 2
-            int widthHalf = Minecraft.getInstance().getMainWindow().getWidth() / 2;
+            FontRenderer fr = Minecraft.getInstance().font;
+            int heightHalf = Minecraft.getInstance().getWindow().getScreenHeight() / 2;  //no fucking idea why I have to divide by 2
+            int widthHalf = Minecraft.getInstance().getWindow().getScreenWidth() / 2;
             /*StringTextComponent tc = new StringTextComponent("mana");
             tc.mergeStyle(TextFormatting.BOLD).mergeStyle(TextFormatting.DARK_BLUE);*/
-            fr.drawString(event.getMatrixStack(), "Reiatsu:" + (long)soulCap.mana + "/" + (long)soulCap.maxMana, widthHalf * 0.2f, heightHalf * 0.8f, 0x1f75fe);
+            fr.draw(event.getMatrixStack(), "Reiatsu:" + (long)soulCap.mana + "/" + (long)soulCap.maxMana, widthHalf * 0.2f, heightHalf * 0.8f, 0x1f75fe);
         }
     }
 }

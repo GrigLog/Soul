@@ -10,10 +10,12 @@ import net.minecraft.item.*;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
+import net.minecraft.item.Item.Properties;
+
 public class Zanpakuto extends SwordItem implements IFastItem {
     public Zanpakuto() {
         super(ItemTier.IRON, 3, -2.4F,
-                new Properties().group(CreativeTab.instance));
+                new Properties().tab(CreativeTab.instance));
         setRegistryName("zanpakuto");
     }
 
@@ -25,30 +27,30 @@ public class Zanpakuto extends SwordItem implements IFastItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand handIn) {
-        ItemStack itemstack = player.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand handIn) {
+        ItemStack itemstack = player.getItemInHand(handIn);
         SoulCap soulCap = SF.getSoul(player);
         if (soulCap.rightClicked){
             soulCap.rightClicked = false;
             soulCap.parryTimer = 15;
-            player.setActiveHand(handIn);
-            return ActionResult.resultConsume(itemstack);
+            player.startUsingItem(handIn);
+            return ActionResult.consume(itemstack);
         }
-        return ActionResult.resultPass(itemstack);
+        return ActionResult.pass(itemstack);
     }
 
     @Override
     //rmb is released
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entity, int timeLeft) {
-        super.onPlayerStoppedUsing(stack, worldIn, entity, timeLeft);
+    public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entity, int timeLeft) {
+        super.releaseUsing(stack, worldIn, entity, timeLeft);
         if (entity instanceof PlayerEntity)
             onRelease((PlayerEntity)entity);
     }
 
     @Override
     //useDuration is over
-    public ItemStack onItemUseFinish(ItemStack stack, World world, LivingEntity entity) {
-        super.onItemUseFinish(stack, world, entity);
+    public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity entity) {
+        super.finishUsingItem(stack, world, entity);
         if (entity instanceof PlayerEntity)
             onRelease((PlayerEntity)entity);
         return stack;
@@ -57,7 +59,7 @@ public class Zanpakuto extends SwordItem implements IFastItem {
     private void onRelease(PlayerEntity player) {
         SoulCap cap = SF.getSoul(player);
         if (cap.CATimer == 0)
-            player.getCooldownTracker().setCooldown(this, 10);
+            player.getCooldowns().addCooldown(this, 10);
     }
 
 }

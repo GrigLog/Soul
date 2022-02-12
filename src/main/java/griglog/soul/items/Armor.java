@@ -15,9 +15,11 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.item.Item.Properties;
+
 public class Armor extends ArmorItem {
     public Armor(EquipmentSlotType slot) {
-        super(new Reishi(), slot, new Properties().group(CreativeTab.instance));
+        super(new Reishi(), slot, new Properties().tab(CreativeTab.instance));
         setRegistryName("reishi_" + slot.getName());
     }
 
@@ -37,27 +39,27 @@ public class Armor extends ArmorItem {
 
     public static class Reishi implements IArmorMaterial {
         @Override
-        public int getDurability(EquipmentSlotType slotIn) {
+        public int getDurabilityForSlot(EquipmentSlotType slotIn) {
             return 100;
         }
 
         @Override
-        public int getDamageReductionAmount(EquipmentSlotType slotIn) {
+        public int getDefenseForSlot(EquipmentSlotType slotIn) {
             return 1;
         }
 
         @Override
-        public int getEnchantability() {
+        public int getEnchantmentValue() {
             return 0;
         }
 
         @Override
-        public SoundEvent getSoundEvent() {
+        public SoundEvent getEquipSound() {
             return null;
         }
 
         @Override
-        public Ingredient getRepairMaterial() {
+        public Ingredient getRepairIngredient() {
             return null;
         }
 

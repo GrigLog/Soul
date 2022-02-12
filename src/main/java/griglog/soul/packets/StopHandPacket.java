@@ -26,10 +26,10 @@ public class StopHandPacket {
         ctx.get().enqueueWork(() -> {
             if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
                 ClientPlayerEntity player = Minecraft.getInstance().player;
-                player.stopActiveHand();
+                player.releaseUsingItem();
             } else if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER){
                 ServerPlayerEntity player = ctx.get().getSender();
-                player.stopActiveHand();
+                player.releaseUsingItem();
             }
         });
         ctx.get().setPacketHandled(true);

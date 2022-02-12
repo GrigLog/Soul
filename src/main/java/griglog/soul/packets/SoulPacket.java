@@ -25,7 +25,7 @@ public class SoulPacket {
 
     static SoulPacket decode(PacketBuffer buf){
         try {
-            return new SoulPacket(new SoulCap().setNbt(JsonToNBT.getTagFromJson(buf.readString())));
+            return new SoulPacket(new SoulCap().setNbt(JsonToNBT.parseTag(buf.readUtf())));
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
             return null;
@@ -33,7 +33,7 @@ public class SoulPacket {
     }
 
     static void encode(SoulPacket p, PacketBuffer buf){
-        buf.writeString(p.cap.getNbt().toString());
+        buf.writeUtf(p.cap.getNbt().toString());
     }
 
     static void handle(SoulPacket p, Supplier<NetworkEvent.Context> ctx){
@@ -43,7 +43,7 @@ public class SoulPacket {
                 SoulCap cap = SF.getSoul(player);
                 cap.setNbt(p.cap.getNbt());
                 if (cap.justParried) {
-                    player.stopActiveHand();
+                    player.releaseUsingItem();
                     cap.justParried = false;
                 }
             } else if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER){

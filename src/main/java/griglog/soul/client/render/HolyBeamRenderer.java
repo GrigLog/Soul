@@ -13,7 +13,7 @@ public class HolyBeamRenderer extends EntityRenderer<HolyBeam> {
     }
 
     @Override
-    public ResourceLocation getEntityTexture(HolyBeam entity) {
+    public ResourceLocation getTextureLocation(HolyBeam entity) {
         return null;
     }
 

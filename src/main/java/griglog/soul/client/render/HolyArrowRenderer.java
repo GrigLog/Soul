@@ -13,7 +13,7 @@ public class HolyArrowRenderer extends ArrowRenderer<HolyArrow> {
     }
 
     @Override
-    public ResourceLocation getEntityTexture(HolyArrow entity) {
+    public ResourceLocation getTextureLocation(HolyArrow entity) {
         return new ResourceLocation(Soul.id, "textures/entity/holy_arrow.png");
     }
 }

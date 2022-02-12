@@ -27,20 +27,22 @@ import net.minecraft.world.World;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import net.minecraft.item.Item.Properties;
+
 public class Dagger extends SwordItem {
     public Dagger(){
-        super(ItemTier.IRON, 0, -2.4f, new Properties().group(CreativeTab.instance));  //these numbers dont mean anything
+        super(ItemTier.IRON, 0, -2.4f, new Properties().tab(CreativeTab.instance));  //these numbers dont mean anything
         setRegistryName("dagger");
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         if (player.isCrouching()){
-            CompoundNBT nbt = player.getHeldItem(hand).getTag();
+            CompoundNBT nbt = player.getItemInHand(hand).getTag();
             assert nbt != null;
             nbt.putBoolean("active", !nbt.getBoolean("active"));
         }
-        return super.onItemRightClick(world, player, hand);
+        return super.use(world, player, hand);
     }
 
     @Override
@@ -58,22 +60,22 @@ public class Dagger extends SwordItem {
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (attacker instanceof PlayerEntity && !stack.getTag().getBoolean("active")){
             SoulCap soul = SF.getSoul((PlayerEntity)attacker);
             soul.addMana(3);
             SF.sendToClient((ServerPlayerEntity)attacker, soul);
         }
-        return super.hitEntity(stack, target, attacker);
+        return super.hurtEnemy(stack, target, attacker);
     }
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
         if (slot == EquipmentSlotType.MAINHAND) {
-            multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier",
+            multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier",
                     (stack.getTag().getBoolean("active") ? -2.4 : 0), AttributeModifier.Operation.ADDITION));
-            multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier",
+            multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier",
                     (stack.getTag().getBoolean("active") ? 8 : 2), AttributeModifier.Operation.ADDITION));
         }
 

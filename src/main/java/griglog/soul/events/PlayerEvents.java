@@ -8,6 +8,7 @@ import griglog.soul.packets.PacketSender;
 import griglog.soul.packets.SoulPacket;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -27,6 +28,14 @@ public class PlayerEvents {
             PlayerEntity player = event.player;
             SoulCap cap = SF.getSoul(player);
             cap.tick();
+            if (cap.dashTimer > 0) {
+                if (--cap.dashTimer == 0){
+                    player.setDeltaMovement(Vector3d.ZERO);
+                }
+
+                //Soul.LOGGER.debug(cap.dashTimer);
+                //player.setPosition(player.getPosX() + cap.dashDir.x, player.getPosY() + cap.dashDir.y, player.getPosZ() + cap.dashDir.z);
+            }
             //Soul.LOGGER.info(SF.world(player.world) + " " + new DecimalFormat("#.##").format(cap.mana)+ " " + new DecimalFormat("#.##").format(cap.maxMana));
         }
     }
@@ -37,12 +46,12 @@ public class PlayerEvents {
             return;
         PlayerEntity player = (PlayerEntity)event.getEntityLiving();
         SoulCap soulCap = player.getCapability(SoulCap.SoulProvider.SOUL_CAP, null).resolve().get();
-        if (player.getHeldItemMainhand().getItem() == Items.zanpakuto && player.isHandActive()) {
+        if (player.getMainHandItem().getItem() == Items.zanpakuto && player.isUsingItem()) {
             SF.playSoundPlayer("sword_clash", player);
             event.setCanceled(true);
             soulCap.CATimer = 20;
             soulCap.justParried = true;
-            player.stopActiveHand();
+            player.releaseUsingItem();
             //the event is cancelled and thus not called on client
             PacketSender.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SoulPacket(soulCap));
         }

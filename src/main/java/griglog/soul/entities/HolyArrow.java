@@ -24,15 +24,15 @@ public class HolyArrow extends AbstractArrowEntity {
         super(Entities.holyArrow, world);
     }
 
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public void onCollideWithPlayer(PlayerEntity entityIn) {} //no pickup
+    public void playerTouch(PlayerEntity entityIn) {} //no pickup
 
 
     @Override
-    protected ItemStack getArrowStack() {
+    protected ItemStack getPickupItem() {
         return null;
     }
 }

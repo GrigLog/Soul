@@ -13,7 +13,7 @@ public class HollowRenderer extends MobRenderer<Hollow, HollowModel> {
     }
 
     @Override
-    public ResourceLocation getEntityTexture(Hollow entity) {
+    public ResourceLocation getTextureLocation(Hollow entity) {
         return new ResourceLocation(Soul.id, "textures/entity/test_hollow.png");
     }
 }

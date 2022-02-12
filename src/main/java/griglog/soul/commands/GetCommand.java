@@ -17,19 +17,19 @@ public class GetCommand {
     @SubscribeEvent
     public static void register(RegisterCommandsEvent event){
         event.getDispatcher().register(Commands.literal("soul_get")
-                .requires((context) -> context.hasPermissionLevel(4))
+                .requires((context) -> context.hasPermission(4))
                 .executes(GetCommand::execute));
     }
 
     public static int execute(CommandContext<CommandSource> context){
         ServerPlayerEntity player = (ServerPlayerEntity)context.getSource().getEntity();
         if (player == null){
-            context.getSource().sendErrorMessage(new StringTextComponent("ServerPlayer is null!"));
+            context.getSource().sendFailure(new StringTextComponent("ServerPlayer is null!"));
             return 0;
         }
         SoulCap cap = SF.getSoul(player);
-        String text = cap.getNbt().getString();
-        context.getSource().sendFeedback(new StringTextComponent(text), true);
+        String text = cap.getNbt().getAsString();
+        context.getSource().sendSuccess(new StringTextComponent(text), true);
         return 0;
     }
 }

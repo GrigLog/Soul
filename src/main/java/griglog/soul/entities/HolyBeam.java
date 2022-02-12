@@ -32,8 +32,8 @@ public class HolyBeam extends ThrowableEntity {
     private final double particle_gap = 0.1;
     private final float maxDamage = 15;
     public HolyBeam(PlayerEntity player, float power){
-        super(Entities.holyBeam, player, player.world);
-        setMotion(player.getLookVec().scale(1));
+        super(Entities.holyBeam, player, player.level);
+        setDeltaMovement(player.getLookAngle().scale(1));
         this.power = power;
     }
 
@@ -44,7 +44,7 @@ public class HolyBeam extends ThrowableEntity {
     }
 
     @Override
-    protected void registerData() {
+    protected void defineSynchedData() {
         //this.dataManager.register(?, ?);
     }
 
@@ -53,46 +53,46 @@ public class HolyBeam extends ThrowableEntity {
             super.tick();
             if (!isAlive())
                 break;
-            world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, getPosX(), getPosY(), getPosZ(), 0, 0, 0);
+            level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, getX(), getY(), getZ(), 0, 0, 0);
         }
-        setDead();
+        removeAfterChangingDimensions();
     }
 
     @Override
-    protected void onEntityHit(EntityRayTraceResult result) {
-        super.onEntityHit(result);
-        if (!this.world.isRemote) {
+    protected void onHitEntity(EntityRayTraceResult result) {
+        super.onHitEntity(result);
+        if (!this.level.isClientSide) {
             Entity entity = result.getEntity();
-            Entity shooter = getShooter();
+            Entity shooter = getOwner();
             if (shooter instanceof LivingEntity) {
-                entity.attackEntityFrom(DamageSource.MAGIC, maxDamage * power);
+                entity.hurt(DamageSource.MAGIC, maxDamage * power);
             }
         }
-        setDead();
+        removeAfterChangingDimensions();
     }
 
     @Override
-    protected void func_230299_a_(BlockRayTraceResult result) {  //onBlockHit, why the fuck is it obfuscated?...
-        super.func_230299_a_(result);
-        setDead();
+    protected void onHitBlock(BlockRayTraceResult result) {  //onBlockHit, why the fuck is it obfuscated?...
+        super.onHitBlock(result);
+        removeAfterChangingDimensions();
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundNBT compound) {
 
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundNBT compound) {
 
     }
 
-    protected float getGravityVelocity() {
+    protected float getGravity() {
         return 0;
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

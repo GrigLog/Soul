@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -19,11 +20,14 @@ public class SoulCap {
     public static int CATimerMax = 20;
     public static int dashWindowMax = 3;
     public static int dashCDMax = 20;
+    public static int dashMax = 5;
 
     public int parryTimer = 0;
     public int CATimer = 0;
     public int dashWindow = 0;
     public int dashCD = 0;
+    public int dashTimer = 0;
+    //public Vector3d dashDir = new Vector3d(0, 0, 0);
     public boolean justParried = false;
     public boolean rightClicked = false;
     public boolean leftClicked = false;
@@ -66,6 +70,8 @@ public class SoulCap {
         CompoundNBT tag = new CompoundNBT();
         tag.putInt("parryTimer", parryTimer);
         tag.putInt("CATimer", CATimer);
+        tag.putInt("dashCD", dashCD);
+        tag.putInt("dashTimer", dashTimer);
         tag.putBoolean("justParried", justParried);
         tag.putBoolean("rightClicked", rightClicked);
         tag.putBoolean("leftClicked", leftClicked);
@@ -76,21 +82,32 @@ public class SoulCap {
             keyItems.putInt(s, usedKeyItems.get(s));
         }
         tag.put("usedKeyItems", keyItems);
+        /*CompoundNBT vector = new CompoundNBT();
+        vector.putDouble("x", dashDir.x);
+        vector.putDouble("y", dashDir.y);
+        vector.putDouble("z", dashDir.z);
+        tag.put("dashDir", vector);*/
+
         return tag;
     }
 
     public SoulCap setNbt(CompoundNBT nbt){
         parryTimer = nbt.getInt("parryTimer");
         CATimer=  nbt.getInt("CATimer");
+        dashCD = nbt.getInt("dashCD");
+        dashTimer = nbt.getInt("dashTimer");
         justParried = nbt.getBoolean("justParried");
         rightClicked = nbt.getBoolean("rightClicked");
         leftClicked =  nbt.getBoolean("leftClicked");
         mana = nbt.getDouble("mana");
         maxMana = nbt.getDouble("maxMana");
         CompoundNBT keyItems = nbt.getCompound("usedKeyItems");
-        for (String s : keyItems.keySet()){
+        for (String s : keyItems.getAllKeys()){
             usedKeyItems.put(s, keyItems.getInt(s));
         }
+        /*CompoundNBT vector = nbt.getCompound("dashDir");
+        dashDir = new Vector3d(vector.getDouble("x"), vector.getDouble("y"), vector.getDouble("z"));
+        */
         return this;
     }
 

@@ -8,10 +8,10 @@ public class CreativeTab extends ItemGroup {
     public static CreativeTab instance = new CreativeTab();
     public CreativeTab(){
         super(Soul.id);
-        setNoTitle();
+        hideTitle();
     }
     @Override
-    public ItemStack createIcon() {
+    public ItemStack makeIcon() {
         return new ItemStack(Items.zanpakuto);
     }
 }

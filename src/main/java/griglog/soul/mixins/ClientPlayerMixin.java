@@ -1,7 +1,9 @@
 package griglog.soul.mixins;
 
 import com.mojang.authlib.GameProfile;
+import griglog.soul.Soul;
 import griglog.soul.items.misc.IFastItem;
+import jdk.nashorn.internal.runtime.regexp.joni.Syntax;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -16,78 +18,77 @@ import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.ForgeHooksClient;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerMixin extends AbstractClientPlayerEntity {
-
-
     public ClientPlayerMixin(ClientWorld world, GameProfile profile) {
         super(world, profile);
     }
 
-    public void livingTick() {  //allows items without slowing down on usage
-        ++this.sprintingTicksLeft;
-        if (this.sprintToggleTimer > 0) {
-            --this.sprintToggleTimer;
+    public void aiStep() {
+        ++this.sprintTime;
+        if (this.sprintTriggerTime > 0) {
+            --this.sprintTriggerTime;
         }
 
-        this.handlePortalTeleportation();
-        boolean flag = this.movementInput.jump;
-        boolean flag1 = this.movementInput.sneaking;
-        boolean flag2 = this.isUsingSwimmingAnimation();
-        this.isCrouching = !this.abilities.isFlying && !this.isSwimming() && this.isPoseClear(Pose.CROUCHING) && (this.isSneaking() || !this.isSleeping() && !this.isPoseClear(Pose.STANDING));
-        this.movementInput.tickMovement(this.isForcedDown());
-        net.minecraftforge.client.ForgeHooksClient.onInputUpdate(this, this.movementInput);
-        this.mc.getTutorial().handleMovement(this.movementInput);
-        if (this.isHandActive() && !this.isPassenger()) {
+        this.handleNetherPortalClient();
+        boolean flag = this.input.jumping;
+        boolean flag1 = this.input.shiftKeyDown;
+        boolean flag2 = this.hasEnoughImpulseToStartSprinting();
+        this.crouching = !this.abilities.flying && !this.isSwimming() && this.canEnterPose(Pose.CROUCHING) && (this.isShiftKeyDown() || !this.isSleeping() && !this.canEnterPose(Pose.STANDING));
+        this.input.tick(this.isMovingSlowly());
+        net.minecraftforge.client.ForgeHooksClient.onInputUpdate(this, this.input);
+        this.minecraft.getTutorial().onInput(this.input);
+        if (this.isUsingItem() && !this.isPassenger()) {
             float mult = 0.2f; //vanilla value
-            if(this.getHeldItemMainhand().getItem() instanceof IFastItem){
-                mult = ((IFastItem)this.getHeldItemMainhand().getItem()).getSlowDown();
+            if(this.getMainHandItem().getItem() instanceof IFastItem){
+                mult = ((IFastItem)this.getMainHandItem().getItem()).getSlowDown();
             }
-            this.movementInput.moveStrafe *= mult;
-            this.movementInput.moveForward *= mult;
-            this.sprintToggleTimer = 0;
+            this.input.leftImpulse *= mult;
+            this.input.forwardImpulse *= mult;
+            this.sprintTriggerTime = 0;
         }
 
         boolean flag3 = false;
         if (this.autoJumpTime > 0) {
             --this.autoJumpTime;
             flag3 = true;
-            this.movementInput.jump = true;
+            this.input.jumping = true;
         }
 
-        if (!this.noClip) {
-            this.setPlayerOffsetMotion(this.getPosX() - (double)this.getWidth() * 0.35D, this.getPosZ() + (double)this.getWidth() * 0.35D);
-            this.setPlayerOffsetMotion(this.getPosX() - (double)this.getWidth() * 0.35D, this.getPosZ() - (double)this.getWidth() * 0.35D);
-            this.setPlayerOffsetMotion(this.getPosX() + (double)this.getWidth() * 0.35D, this.getPosZ() - (double)this.getWidth() * 0.35D);
-            this.setPlayerOffsetMotion(this.getPosX() + (double)this.getWidth() * 0.35D, this.getPosZ() + (double)this.getWidth() * 0.35D);
+        if (!this.noPhysics) {
+            this.moveTowardsClosestSpace(this.getX() - (double)this.getBbWidth() * 0.35D, this.getZ() + (double)this.getBbWidth() * 0.35D);
+            this.moveTowardsClosestSpace(this.getX() - (double)this.getBbWidth() * 0.35D, this.getZ() - (double)this.getBbWidth() * 0.35D);
+            this.moveTowardsClosestSpace(this.getX() + (double)this.getBbWidth() * 0.35D, this.getZ() - (double)this.getBbWidth() * 0.35D);
+            this.moveTowardsClosestSpace(this.getX() + (double)this.getBbWidth() * 0.35D, this.getZ() + (double)this.getBbWidth() * 0.35D);
         }
 
         if (flag1) {
-            this.sprintToggleTimer = 0;
+            this.sprintTriggerTime = 0;
         }
 
-        boolean flag4 = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.abilities.allowFlying;
-        if ((this.onGround || this.canSwim()) && !flag1 && !flag2 && this.isUsingSwimmingAnimation() && !this.isSprinting() && flag4 && !this.isHandActive() && !this.isPotionActive(Effects.BLINDNESS)) {
-            if (this.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.isKeyDown()) {
-                this.sprintToggleTimer = 7;
+        boolean flag4 = (float)this.getFoodData().getFoodLevel() > 6.0F || this.abilities.mayfly;
+        if ((this.onGround || this.isUnderWater()) && !flag1 && !flag2 && this.hasEnoughImpulseToStartSprinting() && !this.isSprinting() && flag4 && !this.isUsingItem() && !this.hasEffect(Effects.BLINDNESS)) {
+            if (this.sprintTriggerTime <= 0 && !this.minecraft.options.keySprint.isDown()) {
+                this.sprintTriggerTime = 7;
             } else {
                 this.setSprinting(true);
             }
         }
 
-        if (!this.isSprinting() && (!this.isInWater() || this.canSwim()) && this.isUsingSwimmingAnimation() && flag4 && !this.isHandActive() && !this.isPotionActive(Effects.BLINDNESS) && this.mc.gameSettings.keyBindSprint.isKeyDown()) {
+        if (!this.isSprinting() && (!this.isInWater() || this.isUnderWater()) && this.hasEnoughImpulseToStartSprinting() && flag4 && !this.isUsingItem() && !this.hasEffect(Effects.BLINDNESS) && this.minecraft.options.keySprint.isDown()) {
             this.setSprinting(true);
         }
 
         if (this.isSprinting()) {
-            boolean flag5 = !this.movementInput.isMovingForward() || !flag4;
-            boolean flag6 = flag5 || this.collidedHorizontally || this.isInWater() && !this.canSwim();
+            boolean flag5 = !this.input.hasForwardImpulse() || !flag4;
+            boolean flag6 = flag5 || this.horizontalCollision || this.isInWater() && !this.isUnderWater();
             if (this.isSwimming()) {
-                if (!this.onGround && !this.movementInput.sneaking && flag5 || !this.isInWater()) {
+                if (!this.onGround && !this.input.shiftKeyDown && flag5 || !this.isInWater()) {
                     this.setSprinting(false);
                 }
             } else if (flag6) {
@@ -96,137 +97,135 @@ public abstract class ClientPlayerMixin extends AbstractClientPlayerEntity {
         }
 
         boolean flag7 = false;
-        if (this.abilities.allowFlying) {
-            if (this.mc.playerController.isSpectatorMode()) {
-                if (!this.abilities.isFlying) {
-                    this.abilities.isFlying = true;
+        if (this.abilities.mayfly) {
+            if (this.minecraft.gameMode.isAlwaysFlying()) {
+                if (!this.abilities.flying) {
+                    this.abilities.flying = true;
                     flag7 = true;
-                    this.sendPlayerAbilities();
+                    this.onUpdateAbilities();
                 }
-            } else if (!flag && this.movementInput.jump && !flag3) {
-                if (this.flyToggleTimer == 0) {
-                    this.flyToggleTimer = 7;
+            } else if (!flag && this.input.jumping && !flag3) {
+                if (this.jumpTriggerTime == 0) {
+                    this.jumpTriggerTime = 7;
                 } else if (!this.isSwimming()) {
-                    this.abilities.isFlying = !this.abilities.isFlying;
+                    this.abilities.flying = !this.abilities.flying;
                     flag7 = true;
-                    this.sendPlayerAbilities();
-                    this.flyToggleTimer = 0;
+                    this.onUpdateAbilities();
+                    this.jumpTriggerTime = 0;
                 }
             }
         }
 
-        if (this.movementInput.jump && !flag7 && !flag && !this.abilities.isFlying && !this.isPassenger() && !this.isOnLadder()) {
-            ItemStack itemstack = this.getItemStackFromSlot(EquipmentSlotType.CHEST);
+        if (this.input.jumping && !flag7 && !flag && !this.abilities.flying && !this.isPassenger() && !this.onClimbable()) {
+            ItemStack itemstack = this.getItemBySlot(EquipmentSlotType.CHEST);
             if (itemstack.canElytraFly(this) && this.tryToStartFallFlying()) {
-                this.connection.sendPacket(new CEntityActionPacket(this, CEntityActionPacket.Action.START_FALL_FLYING));
+                this.connection.send(new CEntityActionPacket(this, CEntityActionPacket.Action.START_FALL_FLYING));
             }
         }
 
-        this.wasFallFlying = this.isElytraFlying();
-        if (this.isInWater() && this.movementInput.sneaking && this.func_241208_cS_()) {
-            this.handleFluidSneak();
+        this.wasFallFlying = this.isFallFlying();
+        if (this.isInWater() && this.input.shiftKeyDown && this.isAffectedByFluids()) {
+            this.goDownInWater();
         }
 
-        if (this.areEyesInFluid(FluidTags.WATER)) {
+        if (this.isEyeInFluid(FluidTags.WATER)) {
             int i = this.isSpectator() ? 10 : 1;
-            this.counterInWater = MathHelper.clamp(this.counterInWater + i, 0, 600);
-        } else if (this.counterInWater > 0) {
-            this.areEyesInFluid(FluidTags.WATER);
-            this.counterInWater = MathHelper.clamp(this.counterInWater - 10, 0, 600);
+            this.waterVisionTime = MathHelper.clamp(this.waterVisionTime + i, 0, 600);
+        } else if (this.waterVisionTime > 0) {
+            this.isEyeInFluid(FluidTags.WATER);
+            this.waterVisionTime = MathHelper.clamp(this.waterVisionTime - 10, 0, 600);
         }
 
-        if (this.abilities.isFlying && this.isCurrentViewEntity()) {
+        if (this.abilities.flying && this.isControlledCamera()) {
             int j = 0;
-            if (this.movementInput.sneaking) {
+            if (this.input.shiftKeyDown) {
                 --j;
             }
 
-            if (this.movementInput.jump) {
+            if (this.input.jumping) {
                 ++j;
             }
 
             if (j != 0) {
-                this.setMotion(this.getMotion().add(0.0D, (double)((float)j * this.abilities.getFlySpeed() * 3.0F), 0.0D));
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, (double)((float)j * this.abilities.getFlyingSpeed() * 3.0F), 0.0D));
             }
         }
 
-        if (this.isRidingHorse()) {
-            IJumpingMount ijumpingmount = (IJumpingMount)this.getRidingEntity();
-            if (this.horseJumpPowerCounter < 0) {
-                ++this.horseJumpPowerCounter;
-                if (this.horseJumpPowerCounter == 0) {
-                    this.horseJumpPower = 0.0F;
+        if (this.isRidingJumpable()) {
+            IJumpingMount ijumpingmount = (IJumpingMount)this.getVehicle();
+            if (this.jumpRidingTicks < 0) {
+                ++this.jumpRidingTicks;
+                if (this.jumpRidingTicks == 0) {
+                    this.jumpRidingScale = 0.0F;
                 }
             }
 
-            if (flag && !this.movementInput.jump) {
-                this.horseJumpPowerCounter = -10;
-                ijumpingmount.setJumpPower(MathHelper.floor(this.getHorseJumpPower() * 100.0F));
-                this.sendHorseJump();
-            } else if (!flag && this.movementInput.jump) {
-                this.horseJumpPowerCounter = 0;
-                this.horseJumpPower = 0.0F;
+            if (flag && !this.input.jumping) {
+                this.jumpRidingTicks = -10;
+                ijumpingmount.onPlayerJump(MathHelper.floor(this.getJumpRidingScale() * 100.0F));
+                this.sendRidingJump();
+            } else if (!flag && this.input.jumping) {
+                this.jumpRidingTicks = 0;
+                this.jumpRidingScale = 0.0F;
             } else if (flag) {
-                ++this.horseJumpPowerCounter;
-                if (this.horseJumpPowerCounter < 10) {
-                    this.horseJumpPower = (float)this.horseJumpPowerCounter * 0.1F;
+                ++this.jumpRidingTicks;
+                if (this.jumpRidingTicks < 10) {
+                    this.jumpRidingScale = (float)this.jumpRidingTicks * 0.1F;
                 } else {
-                    this.horseJumpPower = 0.8F + 2.0F / (float)(this.horseJumpPowerCounter - 9) * 0.1F;
+                    this.jumpRidingScale = 0.8F + 2.0F / (float)(this.jumpRidingTicks - 9) * 0.1F;
                 }
             }
         } else {
-            this.horseJumpPower = 0.0F;
+            this.jumpRidingScale = 0.0F;
         }
 
-        super.livingTick();
-        if (this.onGround && this.abilities.isFlying && !this.mc.playerController.isSpectatorMode()) {
-            this.abilities.isFlying = false;
-            this.sendPlayerAbilities();
+        super.aiStep();
+        if (this.onGround && this.abilities.flying && !this.minecraft.gameMode.isAlwaysFlying()) {
+            this.abilities.flying = false;
+            this.onUpdateAbilities();
         }
 
     }
-
     @Shadow
-    public abstract boolean isForcedDown();
+    protected int sprintTriggerTime;
     @Shadow
-    protected abstract void handlePortalTeleportation();
+    private float jumpRidingScale;
     @Shadow
-    protected abstract void setPlayerOffsetMotion(double v, double v1);
+    private int jumpRidingTicks;
     @Shadow
-    protected abstract void sendHorseJump();
+    public MovementInput input;
     @Shadow
-    public abstract float getHorseJumpPower();
+    private boolean crouching;
+    @Final
     @Shadow
-    protected abstract boolean isCurrentViewEntity();
+    protected Minecraft minecraft;
     @Shadow
-    protected abstract boolean isUsingSwimmingAnimation();
+    public int sprintTime;
     @Shadow
-    public abstract boolean isRidingHorse();
+    private int autoJumpTime;
     @Final
     @Shadow
     public ClientPlayNetHandler connection;
     @Shadow
-    public MovementInput movementInput;
-    @Final
-    @Shadow
-    protected Minecraft mc;
-    protected int sprintToggleTimer;
-    @Shadow
-    public int sprintingTicksLeft;
-    @Shadow
-    private int horseJumpPowerCounter;
-    @Shadow
-    private float horseJumpPower;
-    @Shadow
-    private boolean autoJumpEnabled;
-    @Shadow
-    private int autoJumpTime;
-    @Shadow
     private boolean wasFallFlying;
     @Shadow
-    private boolean isCrouching;
+    private int waterVisionTime;
+
     @Shadow
-    private int counterInWater;
+    protected abstract boolean isControlledCamera();
     @Shadow
-    private boolean showDeathScreen;
+    protected abstract void sendRidingJump();
+    @Shadow
+    public abstract float getJumpRidingScale();
+    @Shadow
+    public abstract boolean isRidingJumpable();
+    @Shadow
+    public abstract boolean isMovingSlowly();
+    @Shadow
+    protected abstract boolean hasEnoughImpulseToStartSprinting();
+    @Shadow
+    protected abstract void handleNetherPortalClient();
+    @Shadow
+    protected abstract void moveTowardsClosestSpace(double pX, double pZ);
+
 }

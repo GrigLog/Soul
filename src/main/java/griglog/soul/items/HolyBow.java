@@ -27,13 +27,13 @@ public class HolyBow extends BowItem implements IFastItem {
     boolean beam_release = false;
     static final float speedMult = 1.1f;
     public HolyBow() {
-        super(new Item.Properties().group(CreativeTab.instance));
+        super(new Item.Properties().tab(CreativeTab.instance));
         setRegistryName("holy_bow");
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack itemstack = player.getHeldItem(hand);
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
         SoulCap soulCap = SF.getSoul(player);
         if (soulCap.rightClicked){
             soulCap.rightClicked = false;
@@ -43,20 +43,20 @@ public class HolyBow extends BowItem implements IFastItem {
             ActionResult<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, world, player, hand, flag);
             if (ret != null) return ret;
 
-            if (!player.abilities.isCreativeMode && !flag) {
-                return ActionResult.resultFail(itemstack);
+            if (!player.abilities.instabuild && !flag) {
+                return ActionResult.fail(itemstack);
             } else {
-                player.setActiveHand(hand);
-                return ActionResult.resultConsume(itemstack);
+                player.startUsingItem(hand);
+                return ActionResult.consume(itemstack);
             }
         }
-        return ActionResult.resultPass(itemstack);
+        return ActionResult.pass(itemstack);
     }
 
 
     @Override
     //left click - stoppedUsing client - stoppedUsing server - swing client - swing server
-    public void onPlayerStoppedUsing(ItemStack stack, World world, LivingEntity entity, int timeLeft) {
+    public void releaseUsing(ItemStack stack, World world, LivingEntity entity, int timeLeft) {
         if (!(entity instanceof PlayerEntity))
             return;
         PlayerEntity player = (PlayerEntity) entity;
@@ -74,14 +74,14 @@ public class HolyBow extends BowItem implements IFastItem {
             float speed = getArrowVelocity(i);
 
             HolyArrow arrow = new HolyArrow(world, player);
-            arrow.setDirectionAndMovement(player, player.rotationPitch, player.rotationYaw, 0.0F, speed * 3, 1.0F);
+            arrow.shootFromRotation(player, player.xRot, player.yRot, 0.0F, speed * 3, 1.0F);
             if (speed == speedMult)
-                arrow.setIsCritical(true);
+                arrow.setCritArrow(true);
 
             //TODO: bonus damage from enchantments
 
-            if (!world.isRemote) {
-                world.addEntity(arrow);
+            if (!world.isClientSide) {
+                world.addFreshEntity(arrow);
                 SF.playSoundPlayer("arrow_shoot", player);
             }
         }
@@ -95,12 +95,12 @@ public class HolyBow extends BowItem implements IFastItem {
         //Soul.LOGGER.info("swing " + SF.world(entity.world));
         PlayerEntity player = (PlayerEntity)entity;
         SoulCap cap = SF.getSoul(player);
-        if (!player.world.isRemote && beam_release && cap.trySpendMana(5)){
+        if (!player.level.isClientSide && beam_release && cap.trySpendMana(5)){
             PacketSender.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SoulPacket(cap));
-            player.world.addEntity(new HolyBeam(player, Math.min(getTicksUsed(stack, player), 20) / 20f));
+            player.level.addFreshEntity(new HolyBeam(player, Math.min(getTicksUsed(stack, player), 20) / 20f));
             beam_release = false;
         }
-        player.stopActiveHand();
+        player.releaseUsingItem();
         return true;
     }
 
@@ -115,7 +115,7 @@ public class HolyBow extends BowItem implements IFastItem {
     }
 
     private int getTicksUsed(ItemStack stack, PlayerEntity player){
-        return getUseDuration(stack) - player.getItemInUseCount();
+        return getUseDuration(stack) - player.getUseItemRemainingTicks();
     }
 
     @Override
@@ -128,7 +128,7 @@ public class HolyBow extends BowItem implements IFastItem {
     }
 
     public static float getArrowVelocity(int charge){
-        return BowItem.getArrowVelocity(charge) * speedMult;
+        return BowItem.getPowerForTime(charge) * speedMult;
     }
 
     public float getSlowDown() { return 0.8f; }

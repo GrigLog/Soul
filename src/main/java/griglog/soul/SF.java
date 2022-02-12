@@ -18,17 +18,17 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 public class SF {
     public static void printChat(String s) {
-        NewChatGui chat = Minecraft.getInstance().ingameGUI.getChatGUI();
+        NewChatGui chat = Minecraft.getInstance().gui.getChat();
         StringTextComponent msg = new StringTextComponent(s);
-        chat.printChatMessage(msg);
+        chat.addMessage(msg);
     }
 
     public static void playSoundPlayer(String fileName, PlayerEntity player){
         SoundEvent event = new SoundEvent(new ResourceLocation("soul", fileName));
-        player.world.playSound(null, player.getPosition(), event, SoundCategory.PLAYERS, 1, 1);
+        player.level.playSound(null, player.blockPosition(), event, SoundCategory.PLAYERS, 1, 1);
     }
 
-    public static String world(World world){return world.isRemote ? "client" : "server";}
+    public static String world(World world){return world.isClientSide ? "client" : "server";}
 
     public static SoulCap getSoul(PlayerEntity player){
         return player.getCapability(SoulCap.SoulProvider.SOUL_CAP, null).resolve().orElse(null);
