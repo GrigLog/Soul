@@ -2,7 +2,7 @@ package griglog.soul.entities;
 
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import griglog.soul.entities.HolyArrow;
+import net.minecraft.entity.monster.SkeletonEntity;
 
 
 @SuppressWarnings("unchecked")
@@ -16,5 +16,6 @@ public class Entities {
     public static final EntityType<Hollow> hollow = (EntityType<Hollow>) EntityType.Builder
             .of(Hollow::new, EntityClassification.CREATURE)
             .build("").setRegistryName("hollow");
+    public static final EntityType<SkeletonEntity> rapidShooter = (EntityType<SkeletonEntity>) RapidShooterEntity.type;
 
 }

@@ -71,7 +71,7 @@ public class InputEvents {
                     float yaw = player.yRot;
                     float x = -MathHelper.sin(yaw * 0.017453292F);
                     float z = MathHelper.cos(yaw * 0.017453292F);
-                    double k = player.isOnGround() ? 5 : 2;
+                    double k = player.isOnGround() ? 4 : 1.6;
                     player.setDeltaMovement(new Vector3d(x * k, 0, z * k));
                     //soulCap.dashCD = SoulCap.dashCDMax;
                     //soulCap.dashTimer = SoulCap.dashMax;

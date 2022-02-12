@@ -3,7 +3,6 @@ package griglog.soul.mixins;
 import com.mojang.authlib.GameProfile;
 import griglog.soul.Soul;
 import griglog.soul.items.misc.IFastItem;
-import jdk.nashorn.internal.runtime.regexp.joni.Syntax;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;

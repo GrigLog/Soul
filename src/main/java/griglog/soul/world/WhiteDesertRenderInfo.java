@@ -17,6 +17,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ISkyRenderHandler;
 
+import javax.annotation.Nullable;
+
 import static net.minecraft.client.renderer.tileentity.EndPortalTileEntityRenderer.END_SKY_LOCATION;
 
 @OnlyIn(Dist.CLIENT)
@@ -37,6 +39,11 @@ public class WhiteDesertRenderInfo extends DimensionRenderInfo {
     @Override
     public boolean isFoggyAt(int p_230493_1_, int p_230493_2_) {
         return true;
+    }
+
+    @Override
+    public float[] getSunriseColor(float p_230492_1_, float p_230492_2_) {
+        return null;
     }
 
     static class SkyRenderer implements ISkyRenderHandler{

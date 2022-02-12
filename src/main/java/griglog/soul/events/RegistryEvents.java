@@ -6,17 +6,21 @@ import griglog.soul.capability.SoulCap;
 import griglog.soul.client.render.HollowRenderer;
 import griglog.soul.client.render.HolyArrowRenderer;
 import griglog.soul.client.render.HolyBeamRenderer;
+import griglog.soul.client.render.RapidShooterRenderer;
 import griglog.soul.entities.Entities;
 import griglog.soul.entities.Hollow;
+import griglog.soul.entities.RapidShooterEntity;
 import griglog.soul.items.misc.CreativeTab;
 import griglog.soul.items.misc.Items;
 import griglog.soul.packets.PacketSender;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.entity.SkeletonRenderer;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -37,20 +41,18 @@ public class RegistryEvents {
     static void registerItems(final RegistryEvent.Register<Item> event){
         event.getRegistry().registerAll(Items.zanpakuto, Items.holyBow, Items.badge, Items.dagger, Items.reishiChest);
         event.getRegistry().registerAll(makeItem(Blocks.whiteSand), makeItem(Blocks.whiteSandstone));
-    }
-
-    private static Item makeItem(Block b){
-        return new BlockItem(b, new Item.Properties().tab(CreativeTab.instance)).setRegistryName(b.getRegistryName());
+        event.getRegistry().registerAll(makeEgg(Entities.rapidShooter));
     }
 
     @SubscribeEvent
     static void registerEntities(final RegistryEvent.Register<EntityType<?>> event){
-        event.getRegistry().registerAll(Entities.holyArrow, Entities.holyBeam, Entities.hollow);
+        event.getRegistry().registerAll(Entities.holyArrow, Entities.holyBeam, Entities.hollow, Entities.rapidShooter);
     }
 
     @SubscribeEvent
     static void setEntityAttributes(EntityAttributeCreationEvent event){
         event.put(Entities.hollow, Hollow.getEntityAttributes());  //TODO: figure out how I can get rid of follow range here
+        event.put(Entities.rapidShooter, RapidShooterEntity.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -74,9 +76,19 @@ public class RegistryEvents {
                 (stack, world, living) -> living != null && living.isUsingItem() && living.getUseItem() == stack ? 1.0F : 0.0F);
         ItemModelsProperties.register(Items.dagger, new ResourceLocation(Soul.id, "active"),
                 (stack, world, living) -> stack.getTag() != null && stack.getTag().getBoolean("active") ? 1f : 0f);
+
         RenderingRegistry.registerEntityRenderingHandler(Entities.holyArrow, HolyArrowRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(Entities.holyBeam, HolyBeamRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(Entities.hollow, HollowRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(Entities.rapidShooter, RapidShooterRenderer::new);
+    }
+
+    private static Item makeItem(Block b){
+        return new BlockItem(b, new Item.Properties().tab(CreativeTab.instance)).setRegistryName(b.getRegistryName());
+    }
+
+    private static Item makeEgg(EntityType<?> e){
+        return new ForgeSpawnEggItem(() -> e, 0xFFFFFF, 0x000000, new Item.Properties().tab(CreativeTab.instance)).setRegistryName(e.getRegistryName() + "_egg");
     }
 
 }
