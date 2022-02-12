@@ -7,6 +7,7 @@ import griglog.soul.client.render.HolyArrowRenderer;
 import griglog.soul.client.render.HolyBeamRenderer;
 import griglog.soul.items.misc.Items;
 import griglog.soul.packets.PacketSender;
+import griglog.soul.world.WhiteDesertRenderInfo;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -41,27 +42,10 @@ public class Soul {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     static void clientLoad(FMLClientSetupEvent event) {
-        /*DimensionRenderInfo customEffect = new DimensionRenderInfo(99999, true, DimensionRenderInfo.FogType.NORMAL, false, false) {
-            @Override
-            public Vector3d getBrightnessDependentFogColor(Vector3d fogColor, float partialTicks) {
-                return fogColor;
-            }
-
-            @Override
-            public boolean isFoggyAt(int posX, int posY) {
-                return true;
-            }
-        };
-        DeferredWorkQueue.runLater(() -> {
-            try {
-                Object2ObjectMap<ResourceLocation, DimensionRenderInfo> effectsRegistry = (Object2ObjectMap<ResourceLocation, DimensionRenderInfo>) ObfuscationReflectionHelper
-                        .getPrivateValue(DimensionRenderInfo.class, null, "EFFECTS");
-                effectsRegistry.put(new ResourceLocation("theabyss:the_abyss"), customEffect);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        RenderTypeLookup.setRenderLayer(portal, RenderType.getTranslucent());*/
+        DimensionRenderInfo customEffect = new WhiteDesertRenderInfo();
+        Object2ObjectMap<ResourceLocation, DimensionRenderInfo> effectsRegistry =
+                ObfuscationReflectionHelper.getPrivateValue(DimensionRenderInfo.class, null, "EFFECTS");
+        effectsRegistry.put(new ResourceLocation(id, "white_desert_effects"), customEffect);
     }
 
 }

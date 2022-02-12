@@ -8,10 +8,12 @@ import griglog.soul.client.render.HolyArrowRenderer;
 import griglog.soul.client.render.HolyBeamRenderer;
 import griglog.soul.entities.Entities;
 import griglog.soul.entities.Hollow;
+import griglog.soul.items.misc.CreativeTab;
 import griglog.soul.items.misc.Items;
 import griglog.soul.packets.PacketSender;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
@@ -28,12 +30,17 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 public class RegistryEvents {
     @SubscribeEvent
     static void registerBlocks(final RegistryEvent.Register<Block> event){
-        event.getRegistry().registerAll(Blocks.whiteSand);
+        event.getRegistry().registerAll(Blocks.whiteSand, Blocks.whiteSandstone);
     }
 
     @SubscribeEvent
     static void registerItems(final RegistryEvent.Register<Item> event){
-        event.getRegistry().registerAll(Items.zanpakuto, Items.holyBow, Items.badge, Items.dagger, Items.reishiChest, Items.reishiLeg, Items.whiteSandItem);
+        event.getRegistry().registerAll(Items.zanpakuto, Items.holyBow, Items.badge, Items.dagger, Items.reishiChest);
+        event.getRegistry().registerAll(makeItem(Blocks.whiteSand), makeItem(Blocks.whiteSandstone));
+    }
+
+    private static Item makeItem(Block b){
+        return new BlockItem(b, new Item.Properties().tab(CreativeTab.instance)).setRegistryName(b.getRegistryName());
     }
 
     @SubscribeEvent

@@ -1,0 +1,14 @@
+{
+  "config": {
+    "top_material": {
+      "Name": "soul:white_sand"
+    },
+    "under_material": {
+      "Name": "soul:white_sand"
+    },
+    "underwater_material": {
+      "Name": "soul:white_sand"
+    }
+  },
+  "type": "minecraft:default"
+}

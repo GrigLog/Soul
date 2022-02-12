@@ -3,8 +3,12 @@
   "item.soul.zanpakuto": "Zanpakuto",
   "item.soul.holy_bow": "Holy Bow",
   "item.soul.badge": "Shinigami Badge",
-  "item.soul.dagger": "Soul dagger",
-  "item.soul.reishi_chest": "Shinigami clothes",
+  "item.soul.dagger": "Soul Dagger",
+  "item.soul.reishi_chest": "Shinigami Clothes",
+
+
+  "block.soul.white_sand": "White Sand",
+  "block.soul.white_sandstone": "White Sandstone",
 
   "entity.soul.hollow": "Hollow"
 }

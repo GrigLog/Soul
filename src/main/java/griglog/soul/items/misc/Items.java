@@ -3,6 +3,7 @@ package griglog.soul.items.misc;
 import griglog.soul.blocks.Blocks;
 import griglog.soul.items.*;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 
 public class Items {
@@ -12,7 +13,4 @@ public class Items {
     public static final Item dagger = new Dagger();
 
     public static final Item reishiChest = new Armor(EquipmentSlotType.CHEST);
-    public static final Item reishiLeg = new Armor(EquipmentSlotType.LEGS);
-
-    public static final Item whiteSandItem = Blocks.whiteSand.asItem();
 }

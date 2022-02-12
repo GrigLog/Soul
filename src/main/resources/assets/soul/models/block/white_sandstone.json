@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "soul:block/white_sandstone_top",
+    "bottom": "soul:block/white_sandstone_bottom",
+    "side": "soul:block/white_sandstone"
+  }
+}
