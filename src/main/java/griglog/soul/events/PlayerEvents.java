@@ -52,8 +52,8 @@ public class PlayerEvents {
             soulCap.CATimer = 20;
             soulCap.justParried = true;
             player.releaseUsingItem();
-            //the event is cancelled and thus not called on client
-            PacketSender.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SoulPacket(soulCap));
+            if (!player.level.isClientSide)
+                PacketSender.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SoulPacket(soulCap));
         }
     }
 

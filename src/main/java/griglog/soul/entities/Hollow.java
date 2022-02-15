@@ -1,5 +1,6 @@
 package griglog.soul.entities;
 
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -10,6 +11,10 @@ import net.minecraft.world.World;
 
 public class Hollow extends MonsterEntity {
     public PlayerEntity targetPlayer;
+    public static EntityType<?> type = EntityType.Builder
+            .of(Hollow::new, EntityClassification.CREATURE)
+            .build("")
+            .setRegistryName("hollow");
     protected Hollow(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
     }

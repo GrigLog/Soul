@@ -3,12 +3,10 @@ package griglog.soul.events;
 import griglog.soul.Soul;
 import griglog.soul.blocks.Blocks;
 import griglog.soul.capability.SoulCap;
-import griglog.soul.client.render.HollowRenderer;
-import griglog.soul.client.render.HolyArrowRenderer;
-import griglog.soul.client.render.HolyBeamRenderer;
-import griglog.soul.client.render.RapidShooterRenderer;
+import griglog.soul.client.render.*;
 import griglog.soul.entities.Entities;
 import griglog.soul.entities.Hollow;
+import griglog.soul.entities.HollowRabbit;
 import griglog.soul.entities.RapidShooterEntity;
 import griglog.soul.items.misc.CreativeTab;
 import griglog.soul.items.misc.Items;
@@ -46,13 +44,14 @@ public class RegistryEvents {
 
     @SubscribeEvent
     static void registerEntities(final RegistryEvent.Register<EntityType<?>> event){
-        event.getRegistry().registerAll(Entities.holyArrow, Entities.holyBeam, Entities.hollow, Entities.rapidShooter);
+        event.getRegistry().registerAll(Entities.holyArrow, Entities.holyBeam, Entities.hollow, Entities.rapidShooter, Entities.hollowRabbit);
     }
 
     @SubscribeEvent
     static void setEntityAttributes(EntityAttributeCreationEvent event){
         event.put(Entities.hollow, Hollow.getEntityAttributes());  //TODO: figure out how I can get rid of follow range here
         event.put(Entities.rapidShooter, RapidShooterEntity.createAttributes().build());
+        event.put(Entities.hollowRabbit, HollowRabbit.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -81,6 +80,7 @@ public class RegistryEvents {
         RenderingRegistry.registerEntityRenderingHandler(Entities.holyBeam, HolyBeamRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(Entities.hollow, HollowRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(Entities.rapidShooter, RapidShooterRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(Entities.hollowRabbit, HollowRabbitRenderer::new);
     }
 
     private static Item makeItem(Block b){

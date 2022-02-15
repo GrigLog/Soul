@@ -25,7 +25,7 @@ public class RapidShooterEntity extends SkeletonEntity {
             .build("")
             .setRegistryName(Soul.id, "rapid_shooter");
 
-    public FastRangedBowAttackGoal<AbstractSkeletonEntity> bowGoal = new FastRangedBowAttackGoal<>(this, 1.0D, 40, 15.0F, 7);
+    public FastRangedBowAttackGoal<AbstractSkeletonEntity> bowGoal = new FastRangedBowAttackGoal<>(this, 1.0D, 40, 15.0F, 10);
     int arrowsToPause = 30;
 
     public RapidShooterEntity(EntityType<? extends SkeletonEntity> type, World world) {

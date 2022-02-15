@@ -3,6 +3,7 @@ package griglog.soul.entities;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
@@ -25,6 +26,10 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 
 public class HolyBeam extends ThrowableEntity {
+    public static EntityType<?> type = EntityType.Builder
+            .of(HolyBeam::new, EntityClassification.MISC)
+            .build("")
+            .setRegistryName("holy_beam");
     private int timer = 0;
     private float power;
 
@@ -38,8 +43,7 @@ public class HolyBeam extends ThrowableEntity {
     }
 
 
-
-    public HolyBeam(EntityType<HolyBeam> type, World world) {
+    public HolyBeam(EntityType<?> type, World world) {
         super(Entities.holyBeam, world);
     }
 

@@ -16,11 +16,14 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class HolyArrow extends AbstractArrowEntity {
+    public static EntityType<?> type = EntityType.Builder
+            .of(HolyArrow::new, EntityClassification.MISC)
+            .build("").setRegistryName("holy_arrow");
     public HolyArrow(World world, PlayerEntity player){
         super(Entities.holyArrow, player, world);
     }
 
-    public HolyArrow (EntityType<HolyArrow> type, World world){
+    public HolyArrow (EntityType<?> type, World world){
         super(Entities.holyArrow, world);
     }
 
